@@ -1,0 +1,9 @@
+- name: "John"
+  password: "secret"
+  roles:
+    - admin
+    - help
+- name: "Mary"
+  password: "secret"
+  roles:
+    - support
