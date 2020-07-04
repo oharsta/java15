@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
 
+import static java.time.DayOfWeek.SATURDAY;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LanguageFeaturesTests {
@@ -34,5 +35,31 @@ public class LanguageFeaturesTests {
                 line breaks
                 """;
         assertEquals(2, s.lines().count());
+    }
+
+    @Test
+    void person() {
+        var p = new Person("jd", 31);
+        assertEquals(31,p.age());
+    }
+
+    @Test
+    void patternInstanceOf() {
+        Object obj = "1234567";
+        if (obj instanceof String str && str.length() > 5) {
+            assertEquals(7, str.length());
+        }
+    }
+
+    @Test
+    void switchReturnValue() {
+        var day = SATURDAY;
+        int numLetters = switch (day) {
+            case MONDAY, FRIDAY, SUNDAY -> 6;
+            case TUESDAY                -> 7;
+            case THURSDAY, SATURDAY     -> 8;
+            case WEDNESDAY              -> 9;
+        };
+        assertEquals(8, numLetters);
     }
 }

@@ -3,6 +3,8 @@ package zilverline;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -10,6 +12,7 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.IOException;
 
 @Configuration
+@EnableConfigurationProperties(TokenUsers.class)
 public class CustomConfiguration {
 
     @Bean
@@ -18,5 +21,6 @@ public class CustomConfiguration {
                 .readValue(new ClassPathResource("/users.yml").getInputStream(), new TypeReference<>() {
         }));
     }
+
 
 }

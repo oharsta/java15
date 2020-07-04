@@ -1,1 +1,16 @@
+logging:
+  level:
+    org.springframework: WARN
+
+spring:
+  main:
+    banner-mode: off
+
+token-api:
+  enabled: true
+  users:
+    - user: test1
+      password: secret
+    - user: test2
+      password: secret
 
