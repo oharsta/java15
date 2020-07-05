@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.time.DayOfWeek.SATURDAY;
 import static org.junit.jupiter.api.Assertions.*;
@@ -61,5 +63,16 @@ public class LanguageFeaturesTests {
             case WEDNESDAY              -> 9;
         };
         assertEquals(8, numLetters);
+    }
+
+    @Test
+    void regExp() {
+        Pattern pattern = Pattern.compile("([a-z0-9_.-]+)@([a-z0-9_.-]+[a-z])");
+        String emails = "Emails jdoe@test.com, mdoe@example.com, and team@qwerty.com";
+        Matcher matcher = pattern.matcher(emails);
+        long count = matcher.results().count();
+
+        assertEquals(3, count);
+
     }
 }
