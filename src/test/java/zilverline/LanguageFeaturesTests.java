@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static java.time.DayOfWeek.SATURDAY;
 import static org.junit.jupiter.api.Assertions.*;
@@ -74,5 +75,12 @@ public class LanguageFeaturesTests {
 
         assertEquals(3, count);
 
+    }
+
+    @Test
+    void listCollectors() {
+        var source = List.of("List", "Map", "Set", "Tree");
+        Map<Integer, List<String>> result = source.stream().collect(Collectors.groupingBy(String::length));
+        assertEquals("{3=[Map, Set], 4=[List, Tree]}", result.toString());
     }
 }
