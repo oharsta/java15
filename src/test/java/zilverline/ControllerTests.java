@@ -1,6 +1,7 @@
 package zilverline;
 
 import io.restassured.RestAssured;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +11,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
@@ -48,4 +50,13 @@ public class ControllerTests {
         assertTrue(tokenUsers.isEnabled());
     }
 
-}
+    @Test
+    public void persons() {
+        List<Person> persons = given()
+                .when()
+                .contentType(ContentType.JSON)
+                .get("/persons")
+                .as(new TypeRef<>() {
+                });
+        assertEquals(2, persons .size());
+    }}

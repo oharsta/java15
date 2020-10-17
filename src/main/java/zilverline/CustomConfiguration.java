@@ -12,7 +12,6 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.IOException;
 
 @Configuration
-@EnableConfigurationProperties(TokenUsers.class)
 public class CustomConfiguration {
 
     @Bean

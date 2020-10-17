@@ -1,6 +1,6 @@
 logging:
   level:
-    org.springframework: WARN
+    org.springframework: INFO
 
 spring:
   main:
