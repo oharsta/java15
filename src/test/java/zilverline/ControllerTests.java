@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
 import java.util.List;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -50,6 +51,17 @@ public class ControllerTests {
     @Test
     void persons() {
         List<Person> persons = given()
+                .when()
+                .contentType(ContentType.JSON)
+                .get("/persons")
+                .as(new TypeRef<>() {
+                });
+        assertEquals(2, persons.size());
+    }
+
+    @Test
+    void personsAsMap() {
+        List<Map> persons = given()
                 .when()
                 .contentType(ContentType.JSON)
                 .get("/persons")

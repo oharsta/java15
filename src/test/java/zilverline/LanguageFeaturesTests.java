@@ -3,6 +3,7 @@ package zilverline;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -16,34 +17,33 @@ public class LanguageFeaturesTests {
     @Test
     void java8functional() {
         List<String> strings = Arrays.asList("1", "2", "3", "3");
-        Set<Integer> integerSet = strings.stream().map(s -> Integer.valueOf(s)).collect(Collectors.toSet());
+        Set<Integer> integerSet = strings.stream().map(Integer::valueOf).collect(Collectors.toSet());
         assertEquals(3, integerSet.size());
 
         String s1 = strings.stream().filter(s -> s.equals("2")).findFirst().orElseThrow(() -> new IllegalArgumentException());
         assertEquals("2", s1);
 
-        boolean b = strings.stream().anyMatch(s -> Integer.valueOf(s) > 2);
+        boolean b = strings.stream().anyMatch(s -> Integer.parseInt(s) > 2);
         assertTrue(b);
 
-        boolean c = strings.stream().allMatch(s -> Integer.valueOf(s) > 2);
+        boolean c = strings.stream().allMatch(s -> Integer.parseInt(s) > 2);
         assertFalse(c);
 
         //static import
-        Map<String, Integer> map = strings.stream()
-                .collect(Collectors.toSet()).stream()
-                .collect(toMap(s -> s, s -> Integer.valueOf(s)));
+        Map<String, Integer> map = new HashSet<>(strings).stream()
+                .collect(toMap(s -> s, Integer::parseInt));
         assertEquals(3, map.size());
     }
 
     @Test
     void optionalMethods() {
         Optional<String> stringOptional = Optional.of("1");
-        Optional<Integer> optionalInteger = stringOptional.map(s -> Integer.valueOf(s));
+        Optional<Integer> optionalInteger = stringOptional.map(s -> Integer.parseInt(s));
         optionalInteger.ifPresent(i -> assertEquals(1, i));
         optionalInteger.ifPresentOrElse(i -> System.out.println(i), () -> System.out.println("nope"));
     }
 
-    //functional interface
+    //functional interface - can only have one method
     interface Execute {
         boolean doIt();
     }
@@ -110,14 +110,13 @@ public class LanguageFeaturesTests {
     }
 
     @Test
-    void regExp() {
-        Pattern pattern = Pattern.compile("([a-z0-9_.-]+)@([a-z0-9_.-]+[a-z])");
-        String emails = "Emails jdoe@test.com, mdoe@example.com, and team@qwerty.com";
+    void regExpJava9ResultsGroup() {
+        Pattern pattern = Pattern.compile("([a-z0-9_.-]+@[a-z0-9_.-]+[a-z])");
+        String emails = "Emails jdoe@test.com, mdoe@example.com, and the last one team@qwerty.com";
         Matcher matcher = pattern.matcher(emails);
-        long count = matcher.results().count();
+        Set<String> results = matcher.results().map(MatchResult::group).collect(Collectors.toSet());
 
-        assertEquals(3, count);
-
+        assertEquals(3, results.size());
     }
 
     @Test
