@@ -3,34 +3,31 @@ package zilverline;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ControllerTests {
 
     @LocalServerPort
     private int port;
 
-    @Before
-    public void before() throws IOException {
+    @BeforeEach
+    public void before() {
         RestAssured.port = port;
     }
 
     @Test
-    public void conf() {
+    void conf() {
         UserConfig userConfig = given()
                 .when()
                 .contentType(ContentType.JSON)
@@ -40,7 +37,7 @@ public class ControllerTests {
     }
 
     @Test
-    public void token() {
+    void token() {
         TokenUsers tokenUsers = given()
                 .when()
                 .contentType(ContentType.JSON)
@@ -51,12 +48,32 @@ public class ControllerTests {
     }
 
     @Test
-    public void persons() {
+    void persons() {
         List<Person> persons = given()
                 .when()
                 .contentType(ContentType.JSON)
                 .get("/persons")
                 .as(new TypeRef<>() {
                 });
-        assertEquals(2, persons .size());
-    }}
+        assertEquals(2, persons.size());
+    }
+
+    @Test
+    void health() {
+        given()
+                .when()
+                .get("/actuator/health")
+                .then()
+                .body("status", equalTo("UP"));
+    }
+
+    @Test
+    void notFound() {
+        given()
+                .when()
+                .get("/nope")
+                .then()
+                .statusCode(404);
+    }
+
+}

@@ -2,16 +2,58 @@ package zilverline;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.time.DayOfWeek.SATURDAY;
+import static java.util.stream.Collectors.toMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LanguageFeaturesTests {
+
+    @Test
+    void java8functional() {
+        List<String> strings = Arrays.asList("1", "2", "3", "3");
+        Set<Integer> integerSet = strings.stream().map(s -> Integer.valueOf(s)).collect(Collectors.toSet());
+        assertEquals(3, integerSet.size());
+
+        String s1 = strings.stream().filter(s -> s.equals("2")).findFirst().orElseThrow(() -> new IllegalArgumentException());
+        assertEquals("2", s1);
+
+        boolean b = strings.stream().anyMatch(s -> Integer.valueOf(s) > 2);
+        assertTrue(b);
+
+        boolean c = strings.stream().allMatch(s -> Integer.valueOf(s) > 2);
+        assertFalse(c);
+
+        //static import
+        Map<String, Integer> map = strings.stream()
+                .collect(Collectors.toSet()).stream()
+                .collect(toMap(s -> s, s -> Integer.valueOf(s)));
+        assertEquals(3, map.size());
+    }
+
+    @Test
+    void optionalMethods() {
+        Optional<String> stringOptional = Optional.of("1");
+        Optional<Integer> optionalInteger = stringOptional.map(s -> Integer.valueOf(s));
+        optionalInteger.ifPresent(i -> assertEquals(1, i));
+        optionalInteger.ifPresentOrElse(i -> System.out.println(i), () -> System.out.println("nope"));
+    }
+
+    //functional interface
+    interface Execute {
+        boolean doIt();
+    }
+
+    @Test
+    void lambda() {
+        Execute e = () -> true;
+        boolean b = e.doIt();
+        assertTrue(b);
+    }
 
     @Test
     void listOf() {
@@ -41,9 +83,9 @@ public class LanguageFeaturesTests {
     }
 
     @Test
-    void person() {
+    void records() {
         var p = new Person("jd", 31);
-        assertEquals(31,p.age());
+        assertEquals(31, p.age());
     }
 
     @Test
@@ -58,10 +100,11 @@ public class LanguageFeaturesTests {
     void switchReturnValue() {
         var day = SATURDAY;
         int numLetters = switch (day) {
+            case THURSDAY -> 0;
             case MONDAY, FRIDAY, SUNDAY -> 6;
-            case TUESDAY                -> 7;
-            case THURSDAY, SATURDAY     -> 8;
-            case WEDNESDAY              -> 9;
+            case TUESDAY -> 7;
+            case SATURDAY -> 8;
+            case WEDNESDAY -> 9;
         };
         assertEquals(8, numLetters);
     }
@@ -82,5 +125,35 @@ public class LanguageFeaturesTests {
         var source = List.of("List", "Map", "Set", "Tree");
         Map<Integer, List<String>> result = source.stream().collect(Collectors.groupingBy(String::length));
         assertEquals("{3=[Map, Set], 4=[List, Tree]}", result.toString());
+    }
+
+    interface TestInterface {
+        private boolean internal() {
+            return true;
+        }
+
+        default boolean def() {
+            return internal() && implementMe();
+        }
+
+        boolean implementMe();
+    }
+
+    @Test
+    void interfaceMethods() {
+        var t = new TestInterface() {
+            @Override
+            public boolean implementMe() {
+                return false;
+            }
+        };
+        assertFalse(t.def());
+    }
+
+    @Test
+    void newStringMethods() {
+        assertTrue(" ".isBlank());
+        assertEquals("testtest", "test".repeat(2));
+
     }
 }

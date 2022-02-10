@@ -2,5 +2,5 @@
 
 ```
 rm -fr ~/.mavenrc
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-15.jdk/Contents/Home
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk-17.jdk
 ```

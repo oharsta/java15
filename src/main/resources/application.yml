@@ -14,3 +14,17 @@ token-api:
     - user: test2
       password: secret
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,mappings"
+  endpoint:
+    info:
+      enabled: true
+    mappings:
+      enabled: true
+  info:
+    git:
+      mode: full
+
