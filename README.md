@@ -1,4 +1,4 @@
-### Playground for JDK 9, 10, 11, 12, 13, 14 and 15 - everything after 8
+### Playground for JDK everything after 8 (up till 17)
 
 ```
 rm -fr ~/.mavenrc

@@ -17,7 +17,7 @@ public class LanguageFeaturesTests {
     @Test
     void java8functional() {
         List<String> strings = Arrays.asList("1", "2", "3", "3");
-        Set<Integer> integerSet = strings.stream().map(Integer::valueOf).collect(Collectors.toSet());
+        Set<Integer> integerSet = strings.stream().map(s2 -> Integer.valueOf(s2)).collect(Collectors.toSet());
         assertEquals(3, integerSet.size());
 
         String s1 = strings.stream().filter(s -> s.equals("2")).findFirst().orElseThrow(() -> new IllegalArgumentException());
