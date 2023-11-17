@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static java.lang.Math.PI;
 import static java.time.DayOfWeek.SATURDAY;
 import static java.util.stream.Collectors.toMap;
 import static org.junit.jupiter.api.Assertions.*;
@@ -154,5 +155,43 @@ public class LanguageFeaturesTests {
         assertTrue(" ".isBlank());
         assertEquals("testtest", "test".repeat(2));
 
+    }
+
+    @Test
+    void testRecordPatters() {
+        record Name(String fName, String lName, Integer age) {
+        }
+        ;
+        Name host = new Name("John", "Doe", 37);
+        String name = switch (host) {
+            case Name(var fName, var lName, var mName) -> lName + ", " + fName + " " + mName;
+        };
+        assertEquals(name, STR. "\{ host.lName }, \{ host.fName } \{ host.age }" );
+    }
+
+    @Test
+    void testSwitch() {
+        interface Shape {
+            double area();
+        }
+        record Circle(double diameter) implements Shape {
+            @Override
+            public double area() {
+                return PI * Circle.this.diameter * Circle.this.diameter;
+            }
+        }
+        record Square(double side) implements Shape {
+            @Override
+            public double area() {
+                return Square.this.side * Square.this.side;
+            }
+        }
+        Shape shape = new Circle(10);
+        String message = switch (shape) {
+            case Circle c -> "A circle with area of " + c.area();
+            case Square s -> "A square with area of " + s.area();
+            default -> "Unknown shape";
+        };
+        assertEquals("A circle with area of " + shape.area(), message);
     }
 }
